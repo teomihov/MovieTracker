@@ -25,7 +25,7 @@ public sealed class GetMovieListHandlerTests : BaseUnitTest
             new GetMovieListRequest(Page: 2, PageSize: 3),
             CancellationToken.None);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(creationResult.IsSuccess, Is.True);
             Assert.That(repository.RequestedSkip, Is.EqualTo(3));
@@ -41,6 +41,6 @@ public sealed class GetMovieListHandlerTests : BaseUnitTest
                 "ScienceFiction",
                 movie.ReleaseYear,
                 movie.PosterUrl)));
-        });
+        }
     }
 }

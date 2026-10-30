@@ -10,13 +10,13 @@ public sealed class ResultTests
     {
         var result = Result<string>.Success("movie");
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.IsFailure, Is.False);
             Assert.That(result.Value, Is.EqualTo("movie"));
             Assert.That(result.Error, Is.EqualTo(Error.None));
-        });
+        }
     }
 
     [Test]
@@ -26,12 +26,12 @@ public sealed class ResultTests
 
         Result<string> result = error;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result.IsSuccess, Is.False);
             Assert.That(result.IsFailure, Is.True);
             Assert.That(result.Value, Is.Null);
             Assert.That(result.Error, Is.EqualTo(error));
-        });
+        }
     }
 }

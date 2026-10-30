@@ -21,7 +21,7 @@ public sealed class MovieTests : BaseUnitTest
             2024,
             $"  {posterUrl}  ");
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.IsFailure, Is.False);
@@ -30,7 +30,7 @@ public sealed class MovieTests : BaseUnitTest
             Assert.That(result.Value!.Title, Is.EqualTo(title));
             Assert.That(result.Value.Description, Is.EqualTo(description));
             Assert.That(result.Value.PosterUrl, Is.EqualTo(posterUrl));
-        });
+        }
     }
 
     [TestCase("id", "Movies.IdRequired", "A movie must have an id.")]
@@ -51,13 +51,13 @@ public sealed class MovieTests : BaseUnitTest
             invalidValue == "releaseYear" ? 1887 : 2024,
             invalidValue == "posterUrl" ? " " : "/images/posters/movie.svg");
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result.IsSuccess, Is.False);
             Assert.That(result.IsFailure, Is.True);
             Assert.That(result.Value, Is.Null);
             Assert.That(result.Error.Code, Is.EqualTo(expectedErrorCode));
             Assert.That(result.Error.Message, Is.EqualTo(expectedErrorMessage));
-        });
+        }
     }
 }

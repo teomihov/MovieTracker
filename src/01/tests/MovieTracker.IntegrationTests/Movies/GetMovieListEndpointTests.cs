@@ -14,7 +14,7 @@ public sealed class GetMovieListEndpointTests : BaseIntegrationTest
         var response = await Client.GetAsync("/api/movies?page=1&pageSize=3");
         var payload = await response.Content.ReadFromJsonAsync<GetMovieListResponse>();
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
             Assert.That(payload, Is.Not.Null);
@@ -25,7 +25,7 @@ public sealed class GetMovieListEndpointTests : BaseIntegrationTest
                 payload.Items.Select(movie => movie.Title),
                 Is.EqualTo(new[] { "Arrival", "Blade Runner 2049", "Inception" }));
             Assert.That(payload.Items.All(movie => movie.PosterUrl.StartsWith("/images/posters/")), Is.True);
-        });
+        }
     }
 
     [Test]
@@ -35,11 +35,11 @@ public sealed class GetMovieListEndpointTests : BaseIntegrationTest
         using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         var errors = payload.RootElement.GetProperty("errors");
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
             Assert.That(errors.TryGetProperty("Page", out _), Is.True);
             Assert.That(errors.TryGetProperty("PageSize", out _), Is.True);
-        });
+        }
     }
 }
